@@ -62,7 +62,8 @@ install: ##@init Install full application
 	@~/assets/scripts/create-symlinks.pl
 	@make init-eqemu-admin-assets
 	@make init-eqemu-admin
-	@make init-server-binaries
+	@make init-dev-build
+	@make dev-build
 	@make init-peq-database
 	@make init-loginserver
 	@make init-peq-editor
@@ -195,7 +196,7 @@ init-set-perms: ##@init Sets permissions recursively
 	find ~/ -not -user eqemu -execdir sudo chown eqemu:eqemu {} \+
 
 init-server-binaries: ##@init Initializes server binaries
-	cd ~/server && ./bin/spire eqemu-server:update -c
+	cd ~/code/build && ninja -j$(expr $(nproc) - 2)
 
 init-perl: ##@init Initializes perl - compiles perl from source to /opt/eqemu-perl
 	@./assets/scripts/banner.pl "Initializing Perl"
@@ -298,6 +299,10 @@ init-dev-build: ##@build Initialize build for development (faster compiles, uses
 build: ##@build Build EQEmu server
 	@./assets/scripts/banner.pl "Building EQEmu Server"
 	cd ~/code/build && make
+
+dev-build:
+	@./assets/scripts/banner.pl "Dev Building EQEmu Server"
+	cd ~/code/build && ninja -j$(expr $(nproc) - 2)
 
 build-clean: ##@build Cleans build directory
 	cd ~/code/build && make clean
