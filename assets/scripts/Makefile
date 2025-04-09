@@ -300,9 +300,11 @@ build: ##@build Build EQEmu server
 	@./assets/scripts/banner.pl "Building EQEmu Server"
 	cd ~/code/build && make
 
+NUMBER_OF_PROCESSORS != nproc
+PROCESSORS_TO_USE != expr ${NUMBER_OF_PROCESSORS} - 2
 dev-build:
 	@./assets/scripts/banner.pl "Dev Building EQEmu Server"
-	cd ~/code/build && ninja -j$(expr $(nproc) - 2)
+	cd ~/code/build && ninja -j${PROCESSORS_TO_USE}
 
 build-clean: ##@build Cleans build directory
 	cd ~/code/build && make clean
