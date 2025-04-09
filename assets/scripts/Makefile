@@ -195,7 +195,7 @@ init-set-perms: ##@init Sets permissions recursively
 	find ~/ -not -user eqemu -execdir sudo chown eqemu:eqemu {} \+
 
 init-server-binaries: ##@init Initializes server binaries
-	cd ~/server && ./bin/spire eqemu-server:update --compile-server=true --release-binaries=false --auto=true
+	cd ~/server && ./bin/spire eqemu-server:update -c
 
 init-perl: ##@init Initializes perl - compiles perl from source to /opt/eqemu-perl
 	@./assets/scripts/banner.pl "Initializing Perl"
