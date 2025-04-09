@@ -107,7 +107,7 @@ init-directories: ##@init Bootstrap directories
 
 init-peq-database: ##@init Sources fresh PEQ database (Warning: Will over-write existing)
 	@./assets/scripts/banner.pl "Bootstrapping PEQ Database"
-	curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip
+	curl https://db.projecteq.net/api/v1/dump/archive/peq-1738400423.zip -o /tmp/db.zip
 	unzip -o /tmp/db.zip -d /tmp/db/
 	cd /tmp/db/peq-dump/ && mysql -u$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.username') \
 		-p$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.password') \
@@ -195,7 +195,7 @@ init-set-perms: ##@init Sets permissions recursively
 	find ~/ -not -user eqemu -execdir sudo chown eqemu:eqemu {} \+
 
 init-server-binaries: ##@init Initializes server binaries
-	cd ~/server && ./bin/spire eqemu-server:update --release-binaries=true --auto=true
+	cd ~/server && ./bin/spire eqemu-server:update --compile-server=true --release-binaries=false --auto=true
 
 init-perl: ##@init Initializes perl - compiles perl from source to /opt/eqemu-perl
 	@./assets/scripts/banner.pl "Initializing Perl"
@@ -237,7 +237,7 @@ pull-maps: ##@assets Pulls maps
 
 pull-eqemu-code: ##@assets Pulls eqemu code
 	@./assets/scripts/banner.pl "Pulling EQEmu Source Code into [./code]"
-	git -C ./code pull 2> /dev/null || git clone https://github.com/EQEmu/Server.git code
+	git -C ./code pull 2> /dev/null || git clone https://github.com/aardmark/EQEmuServer.git code
 
 pull-peq-quests: ##@assets Pulls ProjectEQ quests
 	@./assets/scripts/banner.pl "Pulling Latest ProjectEQ Quests"
