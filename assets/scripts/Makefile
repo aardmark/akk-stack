@@ -170,7 +170,7 @@ init-eqemu-admin: ##@init Initializes EQEmu Admin
 		| jq '.["web-admin"].application.key = "$(shell cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $${1:-32} | head -n 1)"' \
 		| jq '.["web-admin"].launcher.runSharedMemory = true' \
 		| jq '.["web-admin"].launcher.minZoneProcesses = 10' \
-		| jq '.["web-admin"].launcher.staticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,abysmal,firiona,overthere"' \
+		| jq '.["web-admin"].launcher.staticZones = "felwithea,felwitheb,gfaydark,lfaydark,crushbone,mistmoore,butcher,cauldron,unrest,steamfont"' \
 		-M > /tmp/config.json && mv /tmp/config.json ~/server/eqemu_config.json && rm -f /tmp/config.json
 	cd ~/server && ./bin/spire spire:init admin ${ADMIN_PASSWORD} || echo "Already initialized"
 	cd ~/server && ./bin/spire spire:occulus-update
