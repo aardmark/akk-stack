@@ -108,13 +108,13 @@ init-directories: ##@init Bootstrap directories
 
 init-peq-database: ##@init Sources fresh PEQ database (Warning: Will over-write existing)
 	@./assets/scripts/banner.pl "Bootstrapping PEQ Database"
-	curl https://db.projecteq.net/api/v1/dump/archive/peq-1738400423.zip -o /tmp/db.zip
+	wget --quiet -O db.zip "https://www.dropbox.com/scl/fi/t90teygmcu6yzmyzefg2b/init-database.zip?rlkey=oza9dnm6ccoqvrgzo53icxrsx&st=6jibeu3v&dl=1"
 	unzip -o /tmp/db.zip -d /tmp/db/
 	cd /tmp/db/peq-dump/ && mysql -u$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.username') \
 		-p$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.password') \
 		-h $(shell ~/assets/scripts/init/get-config-var.sh '.server.database.host') \
 		$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.db') \
-		< ./create_all_tables.sql
+		< ./init-database.sql
 	rm -rf /tmp/db/
 	cd ~/server && ./bin/world database:updates
 
