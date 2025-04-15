@@ -205,7 +205,8 @@ MYSQL_BACKUP_NAME=${MARIADB_DATABASE}-$(shell date +"%m-%d-%Y")
 mysql-backup: ##@workflow Jump into the MySQL container console
 	$(DOCKER) exec -T mariadb bash -c "mysqldump --lock-tables=false -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost ${MARIADB_DATABASE} > /var/lib/mysql/$(MYSQL_BACKUP_NAME).sql"
 	mkdir -p backup/database/
-	mv ./data/mariadb/$(MYSQL_BACKUP_NAME).sql .
+	cp ./data/mariadb/$(MYSQL_BACKUP_NAME).sql .
+	$(DOCKER) exec -T mariadb bash -c "rm /var/lib/mysql/$(MYSQL_BACKUP_NAME).sql"
 	tar -zcvf backup/database/$(MYSQL_BACKUP_NAME).tar.gz $(MYSQL_BACKUP_NAME).sql
 	rm $(MYSQL_BACKUP_NAME).sql
 
