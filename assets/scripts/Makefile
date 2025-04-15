@@ -182,7 +182,7 @@ init-eqemu-admin-dev: ##@init Initializes EQEmu Admin (Development)
 	cd ~/server/eqemu-web-admin/frontend && npm install
 
 init-peq-editor: ##@init Initializes PEQ Editor DB tables
-	@wget --quiet https://raw.githubusercontent.com/ProjectEQ/peqphpeditor/master/sql/schema.sql -O /tmp/schema.sql
+	@wget --quiet https://raw.githubusercontent.com/aardmark/peqeditor/main/sql/schema.sql -O /tmp/schema.sql
 	@mysql -u$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.username') \
     		-p$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.password') \
     		-h $(shell ~/assets/scripts/init/get-config-var.sh '.server.database.host') \
