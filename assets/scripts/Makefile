@@ -118,6 +118,17 @@ init-peq-database: ##@init Sources fresh PEQ database (Warning: Will over-write 
 	rm -rf /tmp/db/
 	cd ~/server && ./bin/world database:updates
 
+update-content:
+	@./assets/scripts/banner.pl "Updating Content"
+	wget --quiet -O /tmp/db.zip "https://www.dropbox.com/scl/fi/bc3c3892cywx4ke6fjpiv/update-content.zip?rlkey=l1gvzl4h8zgn04v2c5bovv1lw&st=u6c4st4u&dl=0"
+	unzip -o /tmp/db.zip -d /tmp/db/
+	cd /tmp/db/ && mysql -u$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.username') \
+		-p$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.password') \
+		-h $(shell ~/assets/scripts/init/get-config-var.sh '.server.database.host') \
+		$(shell ~/assets/scripts/init/get-config-var.sh '.server.database.db') \
+		< ./update-content.sql
+	rm -rf /tmp/db/
+
 init-loginserver: ##@init Initializes Loginserver
 	@./assets/scripts/banner.pl "Initializing Loginserver"
 	wget --quiet https://raw.githubusercontent.com/EQEmu/Server/master/loginserver/login_util/login.json -O /tmp/login.json
