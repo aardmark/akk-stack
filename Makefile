@@ -200,7 +200,8 @@ bash: ##@workflow Bash into eqemu-server
 mc: ##@workflow Jump into the MySQL container console
 	$(DOCKER) exec mariadb bash -c "mysql -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost ${MARIADB_DATABASE}"
 
-MYSQL_BACKUP_NAME=${MARIADB_DATABASE}-$(shell date +"%m-%d-%Y")
+MYSQL_BACKUP_NAME=${MARIADB_DATABASE}-$(shell date +"%Y-%m-%d")
+MYSQL_DEV_BACKUP_NAME=${MARIADB_DATABASE}-DEV-$(shell date +"%Y-%m-%d")
 
 mysql-backup: ##@workflow Jump into the MySQL container console
 	$(DOCKER) exec -T mariadb bash -c "mysqldump --lock-tables=false -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost ${MARIADB_DATABASE} > /var/lib/mysql/$(MYSQL_BACKUP_NAME).sql"
@@ -209,6 +210,14 @@ mysql-backup: ##@workflow Jump into the MySQL container console
 	$(DOCKER) exec -T mariadb bash -c "rm /var/lib/mysql/$(MYSQL_BACKUP_NAME).sql"
 	tar -zcvf backup/database/$(MYSQL_BACKUP_NAME).tar.gz $(MYSQL_BACKUP_NAME).sql
 	rm $(MYSQL_BACKUP_NAME).sql
+
+mysql-dev-backup: ##@workflow Jump into the MySQL container console
+	$(DOCKER) exec -T mariadb bash -c "mysqldump --no-create-db --lock-tables=false -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost ${MARIADB_DATABASE} aa_ability aa_ranks aa_rank_effects aa_rank_prereqs alternate_currency auras blocked_spells db_str doors global_loot grid grid_entries ground_spawns items level_exp_mods lootdrop lootdrop_entries loottable loottable_entries merchantlist merchantlist_temp npc_faction npc_faction_entries npc_spells npc_spells_entries npc_types pets rule_values skill_caps spawn2 spawnentry spawngroup spawn_conditions spawn_condition_values spells_new tradeskill_recipe tradeskill_recipe_entries zone zone_points > /var/lib/mysql/$(MYSQL_DEV_BACKUP_NAME).sql"
+	mkdir -p backup/database/
+	cp ./data/mariadb/$(MYSQL_DEV_BACKUP_NAME).sql .
+	$(DOCKER) exec -T mariadb bash -c "rm /var/lib/mysql/$(MYSQL_DEV_BACKUP_NAME).sql"
+	tar -zcvf backup/database/$(MYSQL_DEV_BACKUP_NAME).tar.gz $(MYSQL_DEV_BACKUP_NAME).sql
+	rm $(MYSQL_DEV_BACKUP_NAME).sql
 
 mysql-list-users: ##@workflow Lists MySQL users
 	$(DOCKER) exec mariadb bash -c "mysql -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost -e 'select user, password, host from mysql.user;'"
